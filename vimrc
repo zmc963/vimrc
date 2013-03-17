@@ -19,7 +19,7 @@ call pathogen#helptags()
 
 set nocompatible	" not compatible with the old-fashion vi mode
 set bs=2		" allow backspacing over everything in insert mode
-set history=50		" keep 50 lines of command line history
+set history=1000	" keep 1000 lines of command line history
 set ruler		" show the cursor position all the time
 set autoread		" auto read when file is changed from outside
 
@@ -34,9 +34,12 @@ filetype plugin on    " Enable filetype-specific plugins
 " auto reload vimrc when editing it
 autocmd! bufwritepost .vimrc source ~/.vimrc
 
+set number
+set mouse=a
+set mousehide
 
 syntax on		" syntax highlight
-set hlsearch		" search highlighting
+set hlsearch            " search highlighting
 
 if has("gui_running")	" GUI color and font settings
   set guifont=Osaka-Mono:h20
@@ -50,7 +53,13 @@ else
   colors vgod
 endif
 
-set clipboard=unnamed	" yank to the system register (*) by default
+if has("unnamedplus")   " yank to the system register (*) by default
+  set clipboard=unnamedplus
+elseif has("clipboard")
+  set clipboard=unnamed
+endif
+
+
 set showmatch		" Cursor shows matching ) and }
 set showmode		" Show current mode
 set wildchar=<TAB>	" start wild expansion in the command line using <TAB>
@@ -75,8 +84,9 @@ set tm=500
 
 " TAB setting{
    set expandtab        "replace <TAB> with spaces
-   set softtabstop=3 
-   set shiftwidth=3 
+   set softtabstop=4
+   set shiftwidth=4
+   set tabstop=4
 
    au FileType Makefile set noexpandtab
 "}      							
@@ -127,6 +137,12 @@ endfun
 " set leader to ,
 let mapleader=","
 let g:mapleader=","
+
+" indent with windows style 
+nmap <tab> v>
+nmap <s-tab> v<
+vmap <tab> >gv
+vmap <s-tab> <gv
 
 "replace the current word in all opened buffers
 map <leader>r :call Replace()<CR>
@@ -204,7 +220,7 @@ cmap cd. lcd %:p:h
 "--------------------------------------------------------------------------- 
 
 " Ctrl-[ jump out of the tag stack (undo Ctrl-])
-map <C-[> <ESC>:po<CR>
+"map <C-[> <ESC>:po<CR>
 
 " ,g generates the header guard
 map <leader>g :call IncludeGuard()<CR>
@@ -274,18 +290,18 @@ endfun
 
 " --- AutoClose - Inserts matching bracket, paren, brace or quote 
 " fixed the arrow key problems caused by AutoClose
-if !has("gui_running")	
-   set term=linux
-   imap OA <ESC>ki
-   imap OB <ESC>ji
-   imap OC <ESC>li
-   imap OD <ESC>hi
+"if !has("gui_running")	
+"   set term=linux
+"   imap OA <ESC>ki
+"   imap OB <ESC>ji
+"   imap OC <ESC>li
+"   imap OD <ESC>hi
 
-   nmap OA k
-   nmap OB j
-   nmap OC l
-   nmap OD h
-endif
+"   nmap OA k
+"   nmap OB j
+"   nmap OC l
+"   nmap OD h
+"endif
 
 
 
@@ -293,9 +309,9 @@ endif
 let g:CommandTMaxHeight = 15
 
 " --- SuperTab
-let g:SuperTabDefaultCompletionType = "context"
-let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
-let g:SuperTabContextDiscoverDiscovery = ["&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>"]
+"let g:SuperTabDefaultCompletionType = "context"
+"let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
+"let g:SuperTabContextDiscoverDiscovery = ["&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>"]
 
 
 " --- EasyMotion
@@ -316,4 +332,19 @@ let g:tagbar_autofocus = 1
 
 " --- SnipMate
 let g:snipMateAllowMatchingDot = 0
+
+" --- NerdTree
+autocmd vimenter * NERDTree
+let NERDTreeShowBookmarks=1
+let NERDTreeChDirMode=0
+let NERDTreeQuitOnOpen=0
+let NERDTreeMouseMode=2
+let NERDTreeShowHidden=1
+let NERDTreeIgnore=['\.pyc','\~$','\.swo$','\.swp$','\.git','\.hg','\.svn','\.bzr']
+let NERDTreeKeepTreeInNewTab=1
+let g:nerdtree_tabs_open_on_gui_startup=0
+
+map <F2> :NERDTreeToggle<CR>
+
+
 
