@@ -162,10 +162,10 @@ let mapleader=","
 let g:mapleader=","
 
 " indent with windows style 
-nmap <tab> v>
-nmap <s-tab> v<
-vmap <tab> >gv
-vmap <s-tab> <gv
+"nmap <tab> v>
+"nmap <s-tab> v<
+"vmap <tab> >gv
+"vmap <s-tab> <gv
 
 "replace the current word in all opened buffers
 map <leader>r :call Replace()<CR>
@@ -193,9 +193,9 @@ set wmh=0                     " set the min height of a window to 0 so we can ma
 " move around tabs. conflict with the original screen top/bottom
 " comment them out if you want the original H/L
 " go to prev tab 
-map <S-H> gT
+"map <S-H> gT
 " go to next tab
-map <S-L> gt
+"map <S-L> gt
 
 " new tab
 map <C-t><C-t> :tabnew<CR>
@@ -215,7 +215,7 @@ nmap <leader>p :set paste!<BAR>set paste?<CR>
 
 " allow multiple indentation/deindentation in visual mode
 vnoremap < <gv
-vnoremap > >gv
+vnoremap > <gv
 
 " :cd. change working directory to that of the current file
 cmap cd. lcd %:p:h
@@ -326,6 +326,10 @@ endfun
 "   nmap OD h
 "endif
 
+" --- NerdCommenter
+"map <C-1>  <leader>cs
+"map <C-2>  <leader>cu
+
 
 
 " --- Command-T
@@ -352,6 +356,10 @@ let g:tagbar_autofocus = 1
 " --- PowerLine
 " let g:Powerline_symbols = 'fancy' " require fontpatcher
 "
+
+" --- NerdCommenter
+map <C-q>  <leader>csgv
+map <C-a>  <leader>cugv
 
 " --- SnipMate
 let g:snipMateAllowMatchingDot = 0
