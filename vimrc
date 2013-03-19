@@ -114,7 +114,6 @@ endfunction
 
 "}
 
-
 " C/C++ specific settings
 autocmd FileType c,cpp,cc  set cindent comments=sr:/*,mb:*,el:*/,:// cino=>s,e0,n0,f0,{0,}0,^-1s,:0,=s,g0,h1s,p2,t0,+2,(2,)20,*30
 
@@ -153,6 +152,31 @@ fun! Replace()
     :unlet! s:word 
 endfun 
 
+" Visual mode pressing * or # searches for the current selection
+" from  http://amix.dk/blog/post/19486
+function! VisualSelection(direction) range
+    let l:saved_reg = @"
+    execute "normal! vgvy"
+
+    let l:pattern = escape(@", '\\/.*$^~[]')
+    let l:pattern = substitute(l:pattern, "\n$", "", "")
+
+    if a:directio == 'b'
+        execute "normal ?" . l:pattern . "^M"
+    elseif a:direction == 'gv'
+        call CmdLine("vimgrep " . '/'. l:pattern . '/' . ' **/*.')
+    elseif a:direction == 'replace'
+        call CmdLine("%s" . '/'. l:pattern . '/')
+    elseif a:direction == 'f'
+        execute "normal /" . l:pattern . "^M"
+    endif
+
+    let @/ = l:pattern
+    let @" = l:saved_reg
+endfunction
+
+vnoremap <silent> * :call VisualSelection('f')<CR>
+vnoremap <silent> # :call VisualSelection('b')<CR>
 
 "--------------------------------------------------------------------------- 
 " USEFUL SHORTCUTS
@@ -178,17 +202,21 @@ map <leader>] :cn<CR>
 map <leader>[ :cp<CR>
 
 " --- move around splits {
-" move to and maximize the below split 
-map <C-J> <C-W>j<C-W>_
-" move to and maximize the above split 
-map <C-K> <C-W>k<C-W>_
-" move to and maximize the left split 
-nmap <c-h> <c-w>h<c-w><bar>
-" move to and maximize the right split  
-nmap <c-l> <c-w>l<c-w><bar>
-set wmw=0                     " set the min width of a window to 0 so we can maximize others 
-set wmh=0                     " set the min height of a window to 0 so we can maximize others
-" }
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+" Opens a new tab with the current buffer's path
+" from http://amix.dk/blog/post/19486
+map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
+
+" Move a line of text using ALT+[jk] 
+" from http://amix.dk/blog/post/19486
+nmap <M-j> mz:m+<cr>`z
+nmap <M-k> mz:m-2<cr>`z
+vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
+vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " move around tabs. conflict with the original screen top/bottom
 " comment them out if you want the original H/L
@@ -219,6 +247,12 @@ vnoremap > <gv
 
 " :cd. change working directory to that of the current file
 cmap cd. lcd %:p:h
+
+" --- NerdCommenter
+map <C-q>  <leader>csgv
+map <C-a>  <leader>cugv
+" --- NerdTree
+map <F2> :NERDTreeToggle<CR>
 
 " Writing Restructured Text (Sphinx Documentation) {
    " Ctrl-u 1:    underline Parts w/ #'s
@@ -279,6 +313,16 @@ set cot-=preview "disable doc preview in omnicomplete
 " make CSS omnicompletion work for SASS and SCSS
 autocmd BufNewFile,BufRead *.scss             set ft=scss.css
 autocmd BufNewFile,BufRead *.sass             set ft=sass.css
+
+" Delete trailing white space on save, useful for Python and CoffeeScript ;)
+" from http://amix.dk/blog/post/19486
+func! DeleteTrailingWS()
+  exe "normal mz"
+  %s/\s\+$//ge
+  exe "normal `z"
+endfunc
+autocmd BufWrite *.py :call DeleteTrailingWS()
+autocmd BufWrite *.coffee :call DeleteTrailingWS()
 
 "--------------------------------------------------------------------------- 
 " ENCODING SETTINGS
@@ -357,10 +401,6 @@ let g:tagbar_autofocus = 1
 " let g:Powerline_symbols = 'fancy' " require fontpatcher
 "
 
-" --- NerdCommenter
-map <C-q>  <leader>csgv
-map <C-a>  <leader>cugv
-
 " --- SnipMate
 let g:snipMateAllowMatchingDot = 0
 
@@ -374,8 +414,5 @@ let NERDTreeShowHidden=1
 let NERDTreeIgnore=['\.pyc','\~$','\.swo$','\.swp$','\.git','\.hg','\.svn','\.bzr']
 let NERDTreeKeepTreeInNewTab=1
 let g:nerdtree_tabs_open_on_gui_startup=0
-
-map <F2> :NERDTreeToggle<CR>
-
 
 
