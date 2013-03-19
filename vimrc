@@ -122,6 +122,28 @@ autocmd FileType c,cpp,cc  set cindent comments=sr:/*,mb:*,el:*/,:// cino=>s,e0,
 set viminfo='10,\"100,:20,%,n~/.viminfo
 au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
 
+map <F3> :mksession! ~/.vim_session <cr> " Quick write session with F3
+map <F4> :source ~/vim_session <cr>     " And load session with F4
+
+"fu! SaveSessions()
+"    mksession! ~/.vim_session " Quick write session with F3
+"endfunction
+
+"fu! RestoreSessions()
+"    source ~/.vim_session     " And load session with F4
+"endfunction
+"autocmd VimLeave * call SaveSessions()
+"autocmd VimEnter * call RestoreSessions()
+
+" Add highlighting for function definition in C++
+function! EnhanceCppSyntax()
+   syn match cppFuncDef "::\~\?\zs\h\w*\ze([^)]*\()\s*\(const\)\?\)\?$"
+   hi def link cppFuncDef Special
+endfunction"
+
+autocmd Syntax cpp call EnhanceCppSyntax()
+
+
 "--------------------------------------------------------------------------- 
 " Tip #382: Search for <cword> and replace with input() in all open buffers 
 "--------------------------------------------------------------------------- 
