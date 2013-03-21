@@ -142,6 +142,9 @@ endfunction"
 
 autocmd Syntax cpp call EnhanceCppSyntax()
 
+" prompt to write file if you forget to add sudo
+" from http://forrst.com/posts/Use_w_to_sudo_write_a_file_with_Vim-uAN
+cmap w!! w !sudo tee % >/dev/null
 
 "--------------------------------------------------------------------------- 
 " Tip #382: Search for <cword> and replace with input() in all open buffers 
@@ -237,6 +240,12 @@ nmap <leader>/ :nohl<CR>
 cnoremap <C-A>      <Home>
 cnoremap <C-E>      <End>
 cnoremap <C-K>      <C-U>
+
+" temporarily hightlight keyword
+" from http://fcamel-life.blogspot.tw/2011/05/vim-temporarily-highlight-keyword.html
+nmap <leader>h :call matchadd("TempKeyword", "<C-R>=expand("<cword>")<CR>")<CR>
+nmap <leader>d :call clearmatches()<CR>
+hi TempKeyword ctermfg=red
 
 " ,p toggles paste mode
 nmap <leader>p :set paste!<BAR>set paste?<CR>
@@ -370,12 +379,6 @@ endfun
 "   nmap OD h
 "endif
 
-" --- NerdCommenter
-"map <C-1>  <leader>cs
-"map <C-2>  <leader>cu
-
-
-
 " --- Command-T
 let g:CommandTMaxHeight = 15
 
@@ -415,4 +418,6 @@ let NERDTreeIgnore=['\.pyc','\~$','\.swo$','\.swp$','\.git','\.hg','\.svn','\.bz
 let NERDTreeKeepTreeInNewTab=1
 let g:nerdtree_tabs_open_on_gui_startup=0
 
-
+" --- ack.vim
+let g:ackprg="/usr/bin/ack-grep -i --nogroup --column --nocolor" " -H
+nnoremap <silent> <Leader>g :Ack<CR>

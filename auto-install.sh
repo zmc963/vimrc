@@ -21,6 +21,9 @@ git clone https://github.com/zmc963/vimrc.git "$VIMHOME"
 cd "$VIMHOME"
 git submodule update --init
 
+# for id-utils and ack.vim
+sudo apt-get install id-utils ack-grep
+
 ./install-vimrc.sh
 
 cd bundle/command-t/ruby/command-t
