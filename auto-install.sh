@@ -14,6 +14,9 @@ die() {
 [ -e "~/.vim" ] && die "~/.vim already exists."
 [ -e "~/.vimrc" ] && die "~/.vimrc already exists."
 
+# inconsolata font
+sudo apt-get install ttf-inconsolata
+
 # for commandT
 sudo apt-get install ruby ruby-dev
 
