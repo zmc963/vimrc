@@ -149,10 +149,13 @@ autocmd Syntax cpp call EnhanceCppSyntax()
 cmap w!! w !sudo tee % >/dev/null
 
 " syntax folding with manual folds
-augroup vimrc
-  au BufReadPre * setlocal foldmethod=syntax
-  au BufWinEnter * if &fdm == 'syntax' | setlocal foldmethod=manual | endif
-augroup END
+"augroup vimrc
+"  au BufReadPre * setlocal foldmethod=syntax
+"  au BufWinEnter * if &fdm == 'syntax' | setlocal foldmethod=manual | endif
+"augroup END
+autocmd Syntax c,cpp,vim setlocal foldmethod=syntax
+autocmd Syntax c,cpp,vim normal zR
+
 
 "--------------------------------------------------------------------------- 
 " Tip #382: Search for <cword> and replace with input() in all open buffers 
@@ -235,11 +238,34 @@ vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 "map <S-H> gT
 " go to next tab
 "map <S-L> gt
+" move around tabs in a terminal way
+noremap <M-1> 1gt<CR>
+noremap <M-2> 2gt<CR>
+noremap <M-3> 3gt<CR>
+noremap <M-4> 4gt<CR>
+noremap <M-5> 5gt<CR>
+noremap <M-6> 6gt<CR>
+noremap <M-7> 7gt<CR>
+noremap <M-8> 8gt<CR>
+noremap <M-9> 9gt<CR>
+noremap <C-PageUp> gT<CR>
+noremap <C-PageDown> gt<CR>
 
 " new tab
 map <C-t><C-t> :tabnew<CR>
 " close tab
 map <C-t><C-w> :tabclose<CR> 
+
+" use mouse to do blockwise selection
+noremap <leader><LeftMouse> <LeftMouse><Esc><C-V>
+noremap <leader><LeftDrag> <LeftDrag>
+
+"noremap <C-LeftMouse> <4-LeftMouse>
+"inoremap <C-LeftMouse> <4-LeftMouse>
+"onoremap <C-LeftMouse> <C-C><4-LeftMouse>
+"noremap <C-LeftDrag> <LeftDrag>
+"inoremap <C-LeftDrag> <LeftDrag>
+"onoremap <C-LeftDrag> <C-C><LeftDrag>
 
 " ,/ turn off search highlighting
 nmap <leader>/ :nohl<CR>
@@ -434,3 +460,12 @@ nnoremap <silent> <Leader>g :Ack<CR>
 let g:syntastic_cpp_check_header = 1
 "let g:syntastic_cpp_compiler_options = ' -pedantic'
 "let g:syntastic_cpp_compiler_options = ' -std=c++11'
+
+" a.vim
+" the following one only works in gvim
+"noremap <C-Tab> :AT<CR>
+
+" ctag
+" eclipse way to switch between tags
+nnoremap <C-LeftMouse> <C-w><C-]><C-w>T
+nnoremap <C-RightMouse> <C-w><C-t><C-w>c
