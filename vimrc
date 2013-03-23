@@ -14,6 +14,8 @@ endif
 
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
+" for syntastic
+"call pathogen#infect()
 
 " General Settings
 
@@ -427,3 +429,7 @@ let g:nerdtree_tabs_open_on_gui_startup=0
 " --- ack.vim
 let g:ackprg="/usr/bin/ack-grep -i --nogroup --column --nocolor" " -H
 nnoremap <silent> <Leader>g :Ack<CR>
+
+" sytastic
+let g:syntastic_cpp_check_header = 1
+"let g:syntastic_cpp_compiler_options = ' -pedantic'
