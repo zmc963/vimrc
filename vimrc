@@ -146,6 +146,12 @@ autocmd Syntax cpp call EnhanceCppSyntax()
 " from http://forrst.com/posts/Use_w_to_sudo_write_a_file_with_Vim-uAN
 cmap w!! w !sudo tee % >/dev/null
 
+" syntax folding with manual folds
+augroup vimrc
+  au BufReadPre * setlocal foldmethod=syntax
+  au BufWinEnter * if &fdm == 'syntax' | setlocal foldmethod=manual | endif
+augroup END
+
 "--------------------------------------------------------------------------- 
 " Tip #382: Search for <cword> and replace with input() in all open buffers 
 "--------------------------------------------------------------------------- 
