@@ -38,25 +38,25 @@ cd vim
 make VIMRUNTIMEDIR=/usr/share/vim/vim73 -j4
 sudo make install
 
-wget http://llvm.org/releases/3.2/clang+llvm-3.2-x86_64-linux-ubuntu-12.04.tar.gz /tmp/clang.tar.gz
+if [ `file /sbin/init | grep "32-bit"` -eq 0 ]; then
+    wget -O /tmp/clang.tar.gz http://llvm.org/releases/3.2/clang+llvm-3.2-x86-linux-ubuntu-12.04.tar.gz
+elif [ `file /sbin/init | grep "64-bit"` -eq 0 ]; then
+    wget -O /tmp/clang.tar.gz http://llvm.org/releases/3.2/clang+llvm-3.2-x86_64-linux-ubuntu-12.04.tar.gz
+fi
+mkdir /tmp/llvm_root_dir
 tar -xvf /tmp/clang.tar.gz -C /tmp/llvm_root_dir/
-CLANG_TAR_NAME="`ls /tmp/llvm_root_dir | grep clang`"
+CLANG_TAR_NAME="`ls /tmp/llvm_root_dir | grep -i clang | grep -v tar`"
 
 sudo apt-get install cmake python-dev build-essential
-
-cd /tmp
-mkdir ycm_build
-cd !$
-cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=/tmp/llvm_root_dir/"$CLANG_TAR_NAME" . ~/.vim/bundle/YouCompleteMe/cpp
-cd !$ && make ycm_core
 
 # for id-utils and ack.vim
 sudo apt-get install id-utils ack-grep
 
 # for global
-wget ftp://ftp.gnu.org/pub/gnu/global/global-6.2.8.tar.gz /tmp/global.tar.gz
+wget -O /tmp/global.tar.gz ftp://ftp.gnu.org/pub/gnu/global/global-6.2.8.tar.gz
 tar -xvf /tmp/global.tar.gz -C /tmp
-cd /tmp
+GLOBAL_TAR_NAME="`ls /tmp | grep -i global | grep -v tar`"
+cd /tmp/"$GLOBAL_TAR_NAME"
 ./configure
 make -j4
 sudo make install
@@ -73,12 +73,18 @@ cd bundle/command-t/ruby/command-t
 (ruby extconf.rb && make) || warn "Can't compile Command-T."
 
 # for youcompleteme
+cd /tmp
+mkdir ycm_build
+cd !$
+cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=/tmp/llvm_root_dir/"$CLANG_TAR_NAME" . ~/.vim/bundle/YouCompleteMe/cpp
+make ycm_core -j4
+
 #cd ~/.vim/bundle/YouCompleteMe
 #./install.sh --clang-completer
 cp /tmp/llvm_root_dir/"$CLANG_TAR_NAME"/lib/libclang.so ~/.vim/bundle/YouCompleteMe/python
 
 # for global
-mkdir ~/.vim/bundle/gtags/plugin
+mkdir -p ~/.vim/bundle/gtags/plugin
 cp /usr/local/share/gtags/gtags.vim !$
 
 echo "vgod's vimrc is installed."
