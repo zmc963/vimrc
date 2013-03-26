@@ -14,6 +14,9 @@ die() {
 [ -e "~/.vim" ] && die "~/.vim already exists."
 [ -e "~/.vimrc" ] && die "~/.vimrc already exists."
 
+# for puppet
+sudo apt-get install vim-puppet
+
 # inconsolata font
 sudo apt-get install ttf-inconsolata
 
