@@ -469,3 +469,6 @@ let g:syntastic_cpp_check_header = 1
 " eclipse way to switch between tags
 nnoremap <C-LeftMouse> <C-w><C-]><C-w>T
 nnoremap <C-RightMouse> <C-w><C-t><C-w>c
+
+" youcompleteme
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py'
