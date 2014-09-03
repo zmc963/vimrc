@@ -1,24 +1,17 @@
-#!/bin/sh
-VIMHOME=~/.vim
+#!/bin/bash
 
-warn() {
-    echo "$1" >&2
-}
+# note put this repo must be put in ~/.vim
 
-die() {
-    warn "$1"
-    exit 1
-}
-
-[ -e "$VIMHOME/vimrc" ] && die "$VIMHOME/vimrc already exists."
-[ -e "~/.vim" ] && die "~/.vim already exists."
-[ -e "~/.vimrc" ] && die "~/.vimrc already exists."
+# install vim
+git submodule update --init
+git submodule foreach --recursive "git submodule update --init && git checkout master && git pull"
+./install-vimrc.sh
 
 # for puppet
-sudo apt-get install vim-puppet
+#sudo apt-get install vim-puppet
 
 # inconsolata font
-sudo apt-get install ttf-inconsolata
+sudo apt-get install fonts-inconsolata
 
 # for commandT
 sudo apt-get install ruby ruby-dev
@@ -41,10 +34,10 @@ cd vim
 make VIMRUNTIMEDIR=/usr/share/vim/vim73 -j4
 sudo make install
 
-if [ `file /sbin/init | grep "32-bit"` -eq 0 ]; then
-    wget -O /tmp/clang.tar.gz http://llvm.org/releases/3.2/clang+llvm-3.2-x86-linux-ubuntu-12.04.tar.gz
-elif [ `file /sbin/init | grep "64-bit"` -eq 0 ]; then
-    wget -O /tmp/clang.tar.gz http://llvm.org/releases/3.2/clang+llvm-3.2-x86_64-linux-ubuntu-12.04.tar.gz
+if ( file /sbin/init | grep "32-bit" ); then
+    wget -O /tmp/clang.tar.gz http://llvm.org/releases/3.4.2/clang+llvm-3.4.2-x86-linux-gnu-ubuntu-14.04.xz
+elif ( file /sbin/init | grep "64-bit" ); then
+    wget -O /tmp/clang.tar.gz http://llvm.org/releases/3.4.2/clang+llvm-3.4.2-x86_64-linux-gnu-ubuntu-14.04.xz
 fi
 mkdir /tmp/llvm_root_dir
 tar -xvf /tmp/clang.tar.gz -C /tmp/llvm_root_dir/
@@ -64,22 +57,15 @@ cd /tmp/"$GLOBAL_TAR_NAME"
 make -j4
 sudo make install
 
-# install vim 
-git clone https://github.com/zmc963/vimrc.git "$VIMHOME"
-cd "$VIMHOME"
-git submodule update --init
-
-./install-vimrc.sh
-
 # for command-t
 cd bundle/command-t/ruby/command-t
-(ruby extconf.rb && make) || warn "Can't compile Command-T."
+ruby extconf.rb && make
 
 # for youcompleteme
 cd /tmp
 mkdir ycm_build
-cd !$
-cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=/tmp/llvm_root_dir/"$CLANG_TAR_NAME" . ~/.vim/bundle/YouCompleteMe/cpp
+cd ycm_build
+cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=/tmp/llvm_root_dir/"$CLANG_TAR_NAME" . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
 make ycm_core -j4
 
 #cd ~/.vim/bundle/YouCompleteMe
